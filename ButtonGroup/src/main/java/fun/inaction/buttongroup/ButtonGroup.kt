@@ -46,10 +46,10 @@ class ButtonGroup : RecyclerView {
     /**
      * 标签文字大小，单位为 px
      */
-    var labelTextSize:Float = 16f
+    var labelTextSize:Float = 6f
         set(value) {
             field = value
-            mAdapter.labelTextSize = 18f
+            mAdapter.labelTextSize = value
         }
 
     /**
@@ -64,7 +64,7 @@ class ButtonGroup : RecyclerView {
     /**
      * 标签距离顶部的距离
      */
-    var labelTextMarginTop:Int = dp2px(18f).toInt()
+    var labelTextMarginTop:Int = dp2px(8f).toInt()
         set(value){
             field = value
             mAdapter.labelTextMarginTop = value
@@ -97,10 +97,11 @@ class ButtonGroup : RecyclerView {
         horizontalSpace = typedArray.getDimension(R.styleable.ButtonGroup_horizontalSpace, 0f).toInt()
         Log.v(TAG,"xml 获得horizontalSpace = ${horizontalSpace}")
         verticalSpace = typedArray.getDimension(R.styleable.ButtonGroup_verticalSpace, 0f).toInt()
-        labelTextMarginTop = typedArray.getDimension(R.styleable.ButtonGroup_labelMarginTop,dp2px(16f)).toInt()
+        labelTextMarginTop = typedArray.getDimension(R.styleable.ButtonGroup_labelMarginTop,dp2px(8f)).toInt()
 //        Log.e("tag","marginTop = ${labelTextMarginTop}")
         labelTextMarginBottom = typedArray.getDimension(R.styleable.ButtonGroup_labelMarginBottom,0f).toInt()
-        labelTextSize = typedArray.getDimension(R.styleable.ButtonGroup_labelTextSize,sp2px(16f))
+        labelTextSize = typedArray.getDimension(R.styleable.ButtonGroup_labelTextSize,sp2px(6f))
+//        Log.v(TAG,"xml 获得labelTextSize = ${labelTextSize}")
         labelTextColor = typedArray.getColor(R.styleable.ButtonGroup_labelTextColor,Color.parseColor("#000000"))
         init(context)
     }

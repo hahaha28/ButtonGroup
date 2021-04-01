@@ -46,7 +46,9 @@ class ButtonGroupAdapter(val list:List<ButtonGroup.Item>): RecyclerView.Adapter<
 
         // 设置TextView的样式
         with(holder.textView){
-            labelTextSize?.let { textSize = it }
+            labelTextSize?.let { textSize = it
+//                Log.e("tag","文字大小：${it}")
+            }
             labelTextColor?.let { setTextColor(it) }
             labelTextMarginTop?.let { setPadding(paddingLeft,it,paddingRight,paddingBottom)  }
             labelTextMarginBottom?.let { setPadding(paddingLeft,paddingTop,paddingRight,it) }
