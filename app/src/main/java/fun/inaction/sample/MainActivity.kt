@@ -3,6 +3,7 @@ package `fun`.inaction.sample
 import `fun`.inaction.buttongroup.ButtonGroup
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 
 class MainActivity : AppCompatActivity() {
@@ -23,15 +24,16 @@ class MainActivity : AppCompatActivity() {
 //            i++
 //        }
         buttonGroup.setData(listOf(
-            ButtonGroup.Item(R.drawable.default_avatar,"风车"),
-            ButtonGroup.Item(R.drawable.default_avatar,"风车"),
-            ButtonGroup.Item(R.drawable.default_avatar,"风车"),
-            ButtonGroup.Item(R.drawable.icon,"风车"),
-            ButtonGroup.Item(R.drawable.icon,"风车"),
-            ButtonGroup.Item(R.drawable.icon,"风车"),
-            ButtonGroup.Item(R.drawable.icon,"风车")
+            ButtonGroup.Item(R.drawable.ic_collect, "收藏"),
+            ButtonGroup.Item(R.drawable.ic_mark, "标记"),
+            ButtonGroup.Item(R.drawable.ic_history, "历史"),
+            ButtonGroup.Item(R.drawable.ic_near, "附近"),
+            ButtonGroup.Item(R.drawable.ic_report, "上报"),
 
             ))
+        buttonGroup.setOnItemClickListener {
+            Log.e("tag","click ${it}")
+        }
 
     }
 }

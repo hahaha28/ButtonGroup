@@ -13,7 +13,7 @@ import org.w3c.dom.Text
 
 class ButtonGroupAdapter(val list:List<ButtonGroup.Item>): RecyclerView.Adapter<ButtonGroupAdapter.ViewHolder>() {
 
-    var itemClickListener: ()->Unit = {}
+    var itemClickListener: (Int)->Unit = {}
 
     var labelTextSize: Float? = null
     var labelTextColor: Int? = null
@@ -32,10 +32,11 @@ class ButtonGroupAdapter(val list:List<ButtonGroup.Item>): RecyclerView.Adapter<
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_button_group,parent,false)
+        val holder = ViewHolder(view)
         view.setOnClickListener {
-            itemClickListener()
+            itemClickListener(holder.adapterPosition)
         }
-        return ViewHolder(view)
+        return holder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -45,7 +46,7 @@ class ButtonGroupAdapter(val list:List<ButtonGroup.Item>): RecyclerView.Adapter<
 
         // 设置TextView的样式
         with(holder.textView){
-            labelTextSize?.let { setTextSize(TypedValue.COMPLEX_UNIT_SP,it)}
+            labelTextSize?.let { textSize = it }
             labelTextColor?.let { setTextColor(it) }
             labelTextMarginTop?.let { setPadding(paddingLeft,it,paddingRight,paddingBottom)  }
             labelTextMarginBottom?.let { setPadding(paddingLeft,paddingTop,paddingRight,it) }
@@ -57,7 +58,7 @@ class ButtonGroupAdapter(val list:List<ButtonGroup.Item>): RecyclerView.Adapter<
         return list.size
     }
 
-    fun setOnItemClickListener(listener:()->Unit){
+    fun setOnItemClickListener(listener:(Int)->Unit){
         itemClickListener = listener
     }
 

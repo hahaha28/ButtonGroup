@@ -3,19 +3,17 @@ package `fun`.inaction.buttongroup
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
-import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
 
-class ButtonGroup : FrameLayout {
+class ButtonGroup : RecyclerView {
 
-    private lateinit var recyclerView: RecyclerView
+    private val TAG = "ButtonGroup"
 
     /**
      * 一行有几个子项
@@ -33,6 +31,7 @@ class ButtonGroup : FrameLayout {
         set(value) {
             field = value
             itemDecoration.horizontalSpace = value
+            Log.v(TAG,"setHorizontalSpace:${horizontalSpace}")
         }
 
     /**
@@ -45,12 +44,12 @@ class ButtonGroup : FrameLayout {
         }
 
     /**
-     * 标签文字大小，单位为 sp
+     * 标签文字大小，单位为 px
      */
-    var labelTextSize:Float = 18f
+    var labelTextSize:Float = 16f
         set(value) {
             field = value
-            adapter.labelTextSize = 18f
+            mAdapter.labelTextSize = 18f
         }
 
     /**
@@ -59,7 +58,7 @@ class ButtonGroup : FrameLayout {
     var labelTextColor: Int = Color.parseColor("#000000")
         set(value) {
             field = value
-            adapter.labelTextColor = value
+            mAdapter.labelTextColor = value
         }
 
     /**
@@ -68,7 +67,7 @@ class ButtonGroup : FrameLayout {
     var labelTextMarginTop:Int = dp2px(18f).toInt()
         set(value){
             field = value
-            adapter.labelTextMarginTop = value
+            mAdapter.labelTextMarginTop = value
         }
 
     /**
@@ -77,7 +76,7 @@ class ButtonGroup : FrameLayout {
     var labelTextMarginBottom:Int = 0
         set(value) {
             field = value
-            adapter.labelTextMarginBottom = value
+            mAdapter.labelTextMarginBottom = value
         }
 
     /**
@@ -86,7 +85,7 @@ class ButtonGroup : FrameLayout {
     private val itemDecoration = GridLayoutSpaceItemDecoration(0, 0, spanCount)
 
     private var dataList: MutableList<Item> = mutableListOf()
-    private var adapter = ButtonGroupAdapter(dataList)
+    private var mAdapter = ButtonGroupAdapter(dataList)
 
     constructor(context: Context):this(context,null)
 
@@ -96,11 +95,13 @@ class ButtonGroup : FrameLayout {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.ButtonGroup)
         spanCount = typedArray.getInteger(R.styleable.ButtonGroup_spanCount, 5)
         horizontalSpace = typedArray.getDimension(R.styleable.ButtonGroup_horizontalSpace, 0f).toInt()
+        Log.v(TAG,"xml 获得horizontalSpace = ${horizontalSpace}")
         verticalSpace = typedArray.getDimension(R.styleable.ButtonGroup_verticalSpace, 0f).toInt()
         labelTextMarginTop = typedArray.getDimension(R.styleable.ButtonGroup_labelMarginTop,dp2px(16f)).toInt()
 //        Log.e("tag","marginTop = ${labelTextMarginTop}")
         labelTextMarginBottom = typedArray.getDimension(R.styleable.ButtonGroup_labelMarginBottom,0f).toInt()
-
+        labelTextSize = typedArray.getDimension(R.styleable.ButtonGroup_labelTextSize,sp2px(16f))
+        labelTextColor = typedArray.getColor(R.styleable.ButtonGroup_labelTextColor,Color.parseColor("#000000"))
         init(context)
     }
 
@@ -108,12 +109,10 @@ class ButtonGroup : FrameLayout {
      * 初始化
      */
     private fun init(context: Context) {
-        recyclerView = RecyclerView(context)
-        recyclerView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        addView(recyclerView)
-        recyclerView.layoutManager = GridLayoutManager(context, spanCount)
-        recyclerView.adapter = adapter
-        recyclerView.addItemDecoration(itemDecoration)
+        overScrollMode = OVER_SCROLL_NEVER
+        layoutManager = GridLayoutManager(context, spanCount)
+        adapter = mAdapter
+        addItemDecoration(itemDecoration)
     }
 
     /**
@@ -121,9 +120,17 @@ class ButtonGroup : FrameLayout {
      */
     fun setData(itemList: List<Item>){
         dataList.addAll(itemList)
-        adapter.notifyDataSetChanged()
+        mAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * 子项的点击事件
+     */
+    fun setOnItemClickListener(listener:(position:Int)->Unit){
+        mAdapter.setOnItemClickListener {
+            listener(it)
+        }
+    }
 
     /**
      * 子项数据类
@@ -166,6 +173,8 @@ class ButtonGroup : FrameLayout {
         )
     }
 
-
+    fun sp2px(sp: Float):Float{
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, getResources().getDisplayMetrics());
+    }
 
 }
